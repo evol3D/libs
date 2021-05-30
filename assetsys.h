@@ -5859,16 +5859,12 @@ static void assetsys_internal_recurse_directories( assetsys_t* sys, int const co
 
 assetsys_error_t assetsys_mount( assetsys_t* sys, char const* path, char const* mount_as )
     {
-    if( !path ) return ASSETSYS_ERROR_INVALID_PARAMETER;
-    if( !mount_as ) return ASSETSYS_ERROR_INVALID_PARAMETER;
-    if( strchr( path, '\\' ) ) return ASSETSYS_ERROR_INVALID_PATH;
-    if( strchr( mount_as, ':' ) ) return ASSETSYS_ERROR_INVALID_PATH;
-    if( strchr( mount_as, '\\' ) ) return ASSETSYS_ERROR_INVALID_PATH;
+    if( !path || !mount_as) return ASSETSYS_ERROR_INVALID_PARAMETER;
+    if( strchr( path, '\\' ) || strchr( mount_as, '\\' ) ) return ASSETSYS_ERROR_INVALID_PATH;
     int len = (int) strlen( path );
-    if( len > 0 && path[ 0 ] == '/' ) return ASSETSYS_ERROR_INVALID_PATH;       
-    if( len > 1 && path[ len - 1 ] == '/' ) return ASSETSYS_ERROR_INVALID_PATH;     
+    if( len > 1 && path[ len - 1 ] == '/' ) return ASSETSYS_ERROR_INVALID_PATH;
     int mount_len = (int) strlen( mount_as );
-    if( mount_len == 0 || mount_as[ 0 ] != '/' || ( mount_len > 1 && mount_as[ mount_len - 1 ] == '/' ) ) 
+    if( mount_len == 0 ) 
         return ASSETSYS_ERROR_INVALID_PATH;     
     
     enum assetsys_internal_mount_type_t type;
